@@ -322,7 +322,7 @@ $mqtt = new MqttClient($mqtthost, $mqttport, $mqttclientid);
 $shutdown = function (int $signal, $info) use ($mqtt, $mqttprefix) {
     echo PHP_EOL;
     logger('Exit');
-    $mqtt->publish($mqttprefix.'/connected','0');
+    $mqtt->publish($mqttprefix.'/connected', '0', 0, true);
     $mqtt->interrupt();
 };
 
@@ -347,7 +347,7 @@ if($mqttuser || $mqttpassword){
 $mqtt->connect($connectionSettings);
 
 //Publish connection state
-$mqtt->publish($mqttprefix.'/connected','1');
+$mqtt->publish($mqttprefix.'/connected', '1', 0, true);
 
 echo '===== MQTT Client Connected ====='.PHP_EOL;
 echo 'Now waiting for the next publish time ...'.PHP_EOL;
