@@ -45,7 +45,7 @@ function publishMoon(MqttClient $mqtt, $prefix) {
     publish($mqtt,$prefix.'/moon/name', $name);
 }
 
-function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departementNumber) {
+function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departmentNumber) {
 //https://www.data.gouv.fr/en/datasets/contours-geographiques-des-academies/
 //https://www.data.gouv.fr/en/datasets/le-calendrier-scolaire/
 
@@ -55,7 +55,7 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departe
     //build calendar ID
     if ($countryCode == 'fr') {
 
-        if (strpos($departementNumber,'97') == true) {
+        if (strpos($departmentNumber,'97') == true) {
             logger('Error : Calendrier des DOM TOM non pris en charge');
             return;
         }
@@ -66,7 +66,7 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departe
         }
         while ( ($data = fgetcsv($csvHandle,1000,",") ) !== FALSE ) {
 
-            if ($data[3] == $departementNumber) {
+            if ($data[3] == $departmentNumber) {
                 $calendarName =  str_replace(' ','-',$data[2]);
             }
         }
@@ -157,7 +157,7 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departe
     publish($mqtt, $prefix.'/schoolholidays/nextlabel', $nextlabel);
 }
 
-function getPublicHolidays($countryCode, $departementNumber, $year=null) {
+function getPublicHolidays($countryCode, $departmentNumber, $year=null) {
     if ($year === null) $year = date("Y");
 
     $easterDate  = easter_date($year);
@@ -183,7 +183,7 @@ function getPublicHolidays($countryCode, $departementNumber, $year=null) {
         $holidays[mktime(0, 0, 0, $easterMonth, $easterDay + 39, $easterYear)] = 'Ascension';
         $holidays[mktime(0, 0, 0, $easterMonth, $easterDay + 50, $easterYear)] = 'Lundi de Pentecôte';
 
-        switch ($departementNumber) {
+        switch ($departmentNumber) {
             case '57':
             case '67':
             case '68':
@@ -253,10 +253,10 @@ function getPublicHolidays($countryCode, $departementNumber, $year=null) {
 }
 
 
-function publishPublicHolidays(MqttClient $mqtt, $prefix, $countryCode, $departementNumber){
+function publishPublicHolidays(MqttClient $mqtt, $prefix, $countryCode, $departmentNumber){
 
     $todayTimeStamp = strtotime("today");
-    $holidays = getPublicHolidays($countryCode, $departementNumber, date("Y")) + getPublicHolidays($countryCode, $departementNumber, date("Y") + 1);
+    $holidays = getPublicHolidays($countryCode, $departmentNumber, date("Y")) + getPublicHolidays($countryCode, $departmentNumber, date("Y") + 1);
 
     $today = (array_key_exists($todayTimeStamp, $holidays)) ? 1 : 0;
     $todayLabel = ($holiday == 1) ? $holidays[$todayTimeStamp] : '';
@@ -293,7 +293,7 @@ function publishSeason(MqttClient $mqtt, $prefix) {
 //------------------------------- MAIN -------------------------------
 //--------------------------------------------------------------------
 
-$versionnumber='1.0.1';
+$versionnumber='1.0.2';
 
 echo sprintf('===== dayinfo2mqtt v%s =====',$versionnumber).PHP_EOL;
 
@@ -301,10 +301,10 @@ $timezone = $_ENV["TZ"] ?? "Europe/Paris";
 $publishHour = $_ENV["PUBLISHHOUR"] ?? 0;
 $featuresList = strtolower($_ENV["FEATURESLIST"] ?? 'base,moon,schoolholidays,publicholidays,season');
 $countryCode = strtolower($_ENV["COUNTRY"] ?? 'fr');
-$departementNumber = $_ENV["DEPARTEMENT"] ?? '75';
+$departmentNumber = $_ENV["DEPARTMENT"] ?? '75';
 
 $mqttprefix = $_ENV["PREFIX"] ?? "dayinfo2mqtt";
-$mqtthost = $_ENV["HOST"] ?? "192.168.1.28";
+$mqtthost = $_ENV["HOST"];
 $mqttport = $_ENV["PORT"] ?? 1883;
 $mqttclientid = $_ENV["CLIENTID"] ?? "dayinfo2mqtt";
 $mqttuser = $_ENV["USER"];
@@ -357,7 +357,7 @@ $lastPublishTime = time();
 //DEBUG
 // $lastPublishTime = strtotime('last month');
 
-$loopEventHandler = function (MqttClient $mqtt, float $elapsedTime) use ($publishHour, &$lastPublishTime, $mqttprefix, $featuresList, $countryCode, $departementNumber) {
+$loopEventHandler = function (MqttClient $mqtt, float $elapsedTime) use ($publishHour, &$lastPublishTime, $mqttprefix, $featuresList, $countryCode, $departmentNumber) {
     $now = time();
     $todayPublishHour = strtotime('today '.$publishHour.':00');
 
@@ -371,8 +371,8 @@ $loopEventHandler = function (MqttClient $mqtt, float $elapsedTime) use ($publis
 
         if(in_array('base',$explodedFeaturesList)) publishBase($mqtt, $mqttprefix);
         if(in_array('moon',$explodedFeaturesList)) publishMoon($mqtt, $mqttprefix);
-        if(in_array('schoolholidays',$explodedFeaturesList)) publishSchoolHolidays($mqtt, $mqttprefix, $countryCode, $departementNumber);
-        if(in_array('publicholidays',$explodedFeaturesList)) publishPublicHolidays($mqtt, $mqttprefix, $countryCode, $departementNumber);
+        if(in_array('schoolholidays',$explodedFeaturesList)) publishSchoolHolidays($mqtt, $mqttprefix, $countryCode, $departmentNumber);
+        if(in_array('publicholidays',$explodedFeaturesList)) publishPublicHolidays($mqtt, $mqttprefix, $countryCode, $departmentNumber);
         if(in_array('season',$explodedFeaturesList)) publishSeason($mqtt, $mqttprefix);
 
         $lastPublishTime = $todayPublishHour;
