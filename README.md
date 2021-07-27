@@ -1,8 +1,15 @@
 # Prerequisites
 
-An access to the Internet for school vacations update (TBD)
+An access to the Internet for school vacations update (Not Yet Implemented)
 
 # How does it work
+
+This image publishes once a day some usefull information about the current day about:  
+- Basic information
+- Moon
+- School Holidays
+- Public Holidays
+- Season
 
 ![Diagram](https://raw.githubusercontent.com/Domochip/dayinfo2mqtt/master/diagram.svg)
 
@@ -89,7 +96,7 @@ Moon information:
 School holidays are stored in some ics files and included into this image.
 Supported countries are:  
 - fr: France
-- ch: 
+- ch: Switzerland
 - be: Belgium
 
 School holidays information:  
