@@ -136,6 +136,6 @@ docker rmi domochip/dayinfo2mqtt
 ```
 # Ref/Thanks
 
-I want to thanks a lot Lunarok for his Jeedom plugin dayinfo (Infos du jour) which is the original idea of this Docker Image :  
+I want to thanks a lot **Lunarok** for his Jeedom plugin dayinfo (Infos du jour) which is the original code/idea of this Docker Image :  
 * https://github.com/lunarok/jeedom_dayinfo
 * https://market.jeedom.com/index.php?v=d&p=market_display&id=1808
