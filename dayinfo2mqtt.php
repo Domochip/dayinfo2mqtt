@@ -293,7 +293,7 @@ function publishSeason(MqttClient $mqtt, $prefix) {
 //------------------------------- MAIN -------------------------------
 //--------------------------------------------------------------------
 
-$versionnumber='1.0.2';
+$versionnumber='1.0.3';
 
 echo sprintf('===== dayinfo2mqtt v%s =====',$versionnumber).PHP_EOL;
 
@@ -381,11 +381,7 @@ $loopEventHandler = function (MqttClient $mqtt, float $elapsedTime) use ($publis
 
 $mqtt->registerLoopEventHandler($loopEventHandler);
 
-$mqtt->subscribe('php-mqtt/client/test', function ($topic, $message) {
-    echo sprintf("Received message on topic [%s]: %s", $topic, $message).PHP_EOL;
-}, 0);
 $mqtt->loop(true);
 $mqtt->disconnect();
-
 
 ?>
