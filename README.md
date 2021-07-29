@@ -75,6 +75,11 @@ services:
 
 ## Published Informations
 
+### Technical information
+
+* `{prefix}/connected`: 0 or 1, Indicates connection status of the container
+* `{prefix}/executionTime`: DateTime, execution time of the publication
+
 ### Base
 
 Basic information:  
