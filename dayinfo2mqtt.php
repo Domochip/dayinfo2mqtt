@@ -362,7 +362,7 @@ $loopEventHandler = function (MqttClient $mqtt, float $elapsedTime) use ($publis
     $todayPublishHour = strtotime('today '.$publishHour.':00');
 
     //if today publish hour is between $lastPublishTime and $now, then publish
-    if($lastPublishTime<$todayPublishHour && $todayPublishHour<$now){
+    if($lastPublishTime<$todayPublishHour && $todayPublishHour<=$now){
 
         logger('Publish Time');
         publish($mqtt, $mqttprefix.'/executionTime', date(DATE_ATOM));
