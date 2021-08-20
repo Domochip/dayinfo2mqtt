@@ -350,7 +350,9 @@ $mqtt->connect($connectionSettings);
 $mqtt->publish($mqttprefix.'/connected', '1', 0, true);
 
 echo '===== MQTT Client Connected ====='.PHP_EOL;
-echo 'Now waiting for the next publish time ...'.PHP_EOL;
+echo 'Now waiting for the next publish time => ';
+if (strtotime('today '.$publishHour.':00') > strtotime('now')) echo date(DATE_ATOM, strtotime('today '.$publishHour.':00')).PHP_EOL;
+else echo date(DATE_ATOM, strtotime('tomorrow '.$publishHour.':00')).PHP_EOL;
 
 $lastPublishTime = time();
 
