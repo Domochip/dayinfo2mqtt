@@ -2,7 +2,6 @@
 
 require __DIR__ . '/vendor/autoload.php';
 require_once dirname(__FILE__) . '/lib/class.iCalReader.php';
-require_once dirname(__FILE__) . '/lib/class.MoonPhase.php';
 require_once dirname(__FILE__) . '/lib/class.Season.php';
 
 use PhpMqtt\Client\ConnectionSettings;
@@ -36,6 +35,13 @@ function publishMoon(MqttClient $mqtt, $prefix) {
     $phase = round($moon->phase(),2); //0 et 1 nouvelle lune, 0,5 pleine lune
     $illumination = round($moon->illumination(),2);
     $distance = round($moon->distance(),2);
+
+    // Prepare next version
+    // $age = round($moon->get('age'),1); // age de la lune en jour
+    // $phase = round($moon->get('phase'),2); //0 et 1 nouvelle lune, 0,5 pleine lune
+    // $illumination = round($moon->get('illumination'),2);
+    // $distance = round($moon->get('distance'),2);
+
     $name = $moon->phase_name();
 
     publish($mqtt,$prefix.'/moon/phase', $phase);
@@ -293,7 +299,7 @@ function publishSeason(MqttClient $mqtt, $prefix) {
 //------------------------------- MAIN -------------------------------
 //--------------------------------------------------------------------
 
-$versionnumber='1.0.4';
+$versionnumber='1.0.5';
 
 echo sprintf('===== dayinfo2mqtt v%s =====',$versionnumber).PHP_EOL;
 
