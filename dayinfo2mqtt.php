@@ -1,7 +1,6 @@
 <?php
 
 require __DIR__ . '/vendor/autoload.php';
-require_once dirname(__FILE__) . '/lib/class.iCalReader.php';
 require_once dirname(__FILE__) . '/lib/class.Season.php';
 
 use PhpMqtt\Client\ConnectionSettings;
@@ -81,7 +80,7 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
         $calendarName = $countryCode;
     }
     $icaddr = dirname(__FILE__) . '/resources/' . $countryCode . '/' . $calendarName . '.ics';
-    $ical   = new ICal($icaddr);
+    $ical   = new ICal\ICal($icaddr);
 
     $events = $ical->events();
     $datetoday = date_create("today");
@@ -91,17 +90,17 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
     $debutete = $finete;
 
     foreach ($events as $event) {
-        if (isset($event['DTEND'])) {
-            $datehol = date_create($event['DTSTART']);
+        if (isset($event->dtend)) {
+            $datehol = date_create($event->dtstart);
             if ($datetoday < $datehol) {
                 //calcul du début prochaines vacances
                 $diff = date_diff($datetoday, $datehol);
                 if ($diff->format('%a') < $diffday && $diff->format('%a') > 0) {
                     $diffday = $diff->format('%a');
-                    $nextlabel = $event['SUMMARY'];
+                    $nextlabel = $event->summary;
                 }
             }
-            $datefin = date_create($event['DTEND']);
+            $datefin = date_create($event->dtend);
             if ($datetoday < $datefin) {
                 //calcul de la fin des prochaines vacances
                 $diff = date_diff($datetoday, $datefin);
@@ -112,20 +111,20 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
             if ($datehol <= $datetoday && $datetoday < $datefin)
             {
                 $holiday = '1';
-                $nholiday = $event['SUMMARY'];
+                $nholiday = $event->summary;
             }
         } else {
-            if (strpos($event['DESCRIPTION'],'été') !== false) {
+            if (strpos($event->description,'été') !== false) {
                 //post debut vacances d'été (label vacances, date supérieure et on est bien sur l'année en cours)
-                $datehol = date_create($event['DTSTART']);
+                $datehol = date_create($event->dtstart);
                 if (date_format($datetoday,'Y') === date_format($datehol,'Y') ) {
                     $debutete = $datehol;
                     //log::add('dayinfo', 'debug', 'Debut ' . $debutete);
                 }
             }
-            if ($event['DESCRIPTION'] == "Rentrée scolaire des élèves") {
+            if ($event->description == "Rentrée scolaire des élèves") {
                 //post reprise (label rentrée, date supérieure)
-                $datehol = date_create($event['DTSTART']);
+                $datehol = date_create($event->dtstart);
                 //log::add('dayinfo', 'debug', 'Fin ' . date_format($datetoday,'Y') . ' ' . date_format($datehol,'Y'));
                 if (date_format($datetoday,'Y') === date_format($datehol,'Y') ) {
                     $finete = $datehol;
@@ -299,7 +298,7 @@ function publishSeason(MqttClient $mqtt, $prefix) {
 //------------------------------- MAIN -------------------------------
 //--------------------------------------------------------------------
 
-$versionnumber='1.0.5';
+$versionnumber='1.0.6';
 
 echo sprintf('===== dayinfo2mqtt v%s =====',$versionnumber).PHP_EOL;
 
