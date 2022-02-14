@@ -30,10 +30,10 @@ function publishBase(MqttClient $mqtt, $prefix) {
 
 function publishMoon(MqttClient $mqtt, $prefix) {
     $moon = new Solaris\MoonPhase();
-    $age = round($moon->age(),1); // age de la lune en jour
+    $age = round($moon->get('age'),1); // age de la lune en jour
     $phase = round($moon->phase(),2); //0 et 1 nouvelle lune, 0,5 pleine lune
-    $illumination = round($moon->illumination(),2);
-    $distance = round($moon->distance(),2);
+    $illumination = round($moon->get('illumination'),2);
+    $distance = round($moon->get('distance'),2);
 
     // Prepare next version
     // $age = round($moon->get('age'),1); // age de la lune en jour
