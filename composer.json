@@ -1,6 +1,6 @@
 {
     "require": {
-        "php-mqtt/client": "v1.7.1",
+        "php-mqtt/client": "v1.8.0",
         "solaris/php-moon-phase": "v2.1.0",
         "johngrogg/ics-parser": "v3.2.0"
     }
