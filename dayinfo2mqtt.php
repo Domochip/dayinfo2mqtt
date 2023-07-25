@@ -58,7 +58,7 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
             logger('Error : Calendrier des DOM TOM non pris en charge');
             return;
         }
-        $csvPath = dirname(__FILE__) . '/resources/fr/academies-20160209.csv';
+        $csvPath = dirname(__FILE__) . '/resources/fr/academies.csv';
         if (($csvHandle = fopen($csvPath, "r")) === FALSE) {
             logger('Error : the file "'.$csvPath.'" can\'t be opened !!!');
             exit();
