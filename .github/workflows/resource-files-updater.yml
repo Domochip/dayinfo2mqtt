@@ -1,0 +1,45 @@
+name: Resource Files Updater
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: resource-files-update
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Prepare local repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --all
+          if [[ $(git branch -r -l "origin/$BRANCH" | wc -c) -eq 0 ]]; then git branch $BRANCH; fi
+          git checkout $BRANCH
+
+      - name: Update Resource Files
+        run: |
+          while IFS=, read -r URL dest; do 
+            echo "Downloading $URL to $dest"
+            curl --fail -L -sS $URL -o $dest; 
+          done < <(tail -n +2 ./resources-urls.csv)
+
+      - name: Commit, Push, PR and Merge if changes
+        run: |
+          if [[ $(git status --porcelain | wc -c) -ne 0 ]]; then
+            prbody=`git status --porcelain`
+            git add .
+            git commit -m "Resource File Update"
+            git push -u origin $BRANCH
+            if [[ $(gh pr list --state open --head $BRANCH | wc -c) -eq 0 ]]; then
+              gh pr create --base main --head $BRANCH --title "Resource file update" --body "$prbody"
+            fi
+            gh pr merge `gh pr list --state open --head $BRANCH | grep -oP '(?<=#)[0-9]+'` --squash --auto --delete-branch
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}

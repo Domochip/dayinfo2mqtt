@@ -1,0 +1,13 @@
+Resource files are monitored via the GitHub Action named 'Resource Files Updater'
+list of URLs and files are in the resources-urls.csv
+
+Resource files infos : 
+- ./resources/fr/academies.csv
+  permalink from https://www.data.gouv.fr/en/datasets/contours-geographiques-des-academies/
+    => https://www.data.gouv.fr/fr/datasets/r/b363e051-9649-4879-ae78-71ef227d0cc5
+
+- ./resources/fr/Zone-A.ics & B & C
+  permmalinks from https://www.data.gouv.fr/en/datasets/le-calendrier-scolaire/
+    => https://www.data.gouv.fr/fr/datasets/r/ee16d126-af0f-4b3b-84d3-080ef8bc0abd
+    => https://www.data.gouv.fr/fr/datasets/r/c03b7373-6698-4e44-b5f1-9408b4b2cfe8
+    => https://www.data.gouv.fr/fr/datasets/r/c594ee20-e694-4f30-810d-752acdf69d70
