@@ -27,7 +27,7 @@ jobs:
           while IFS=, read -r URL dest; do 
             echo "Downloading $URL to $dest"
             curl --fail -L -sS $URL -o $dest --create-dirs; 
-          done < <(tail -n +2 ./resources-urls.csv)
+          done < <(tail -n +2 ./resources/resources-urls.csv)
 
       - name: Commit, Push, PR and Merge if changes
         run: |
