@@ -36,9 +36,8 @@ jobs:
             git add .
             git commit -m "Resource File Update"
             git push -u origin $BRANCH
-            git fetch --all
             if [[ $(gh pr list --state open --head $BRANCH | wc -c) -eq 0 ]]; then
-              gh pr create --base main --head $BRANCH --title "Resource file update" --body "$prbody"
+              gh pr create --base master --head $BRANCH --title "Resource file update" --body "$prbody"
             fi
             gh pr merge `gh pr list --state open --head $BRANCH | grep -oP '(?<=#)[0-9]+'` --squash --auto --delete-branch
           fi
