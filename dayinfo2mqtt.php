@@ -301,6 +301,7 @@ $publishHour = $_ENV["PUBLISHHOUR"] ?? 0;
 $featuresList = strtolower($_ENV["FEATURESLIST"] ?? 'base,moon,schoolholidays,publicholidays,season');
 $countryCode = strtolower($_ENV["COUNTRY"] ?? 'fr');
 $departmentNumber = $_ENV["DEPARTMENT"] ?? '75';
+$debugMode = $_ENV["DEBUGMODE"] ?? false;
 
 $mqttprefix = $_ENV["PREFIX"] ?? "dayinfo2mqtt";
 $mqtthost = $_ENV["HOST"];
@@ -356,11 +357,19 @@ else echo date(DATE_ATOM, strtotime('tomorrow '.$publishHour.':00')).PHP_EOL;
 $lastPublishTime = time();
 
 //DEBUG
-// $lastPublishTime = strtotime('last month');
+if ($debugMode) {
+    logger('DEBUGMODE Enabled');
+    $lastPublishTime = strtotime('yesterday');
+}
 
-$loopEventHandler = function (MqttClient $mqtt, float $elapsedTime) use ($publishHour, &$lastPublishTime, $mqttprefix, $featuresList, $countryCode, $departmentNumber) {
+$loopEventHandler = function (MqttClient $mqtt, float $elapsedTime) use ($publishHour, &$lastPublishTime, $mqttprefix, $featuresList, $countryCode, $departmentNumber, $debugMode) {
     $now = time();
     $todayPublishHour = strtotime('today '.$publishHour.':00');
+
+    //DEBUG
+    if ($debugMode) {
+        $todayPublishHour = $lastPublishTime + 60;
+    }
 
     //if today publish hour is between $lastPublishTime and $now, then publish
     if($lastPublishTime<$todayPublishHour && $todayPublishHour<=$now){
@@ -376,7 +385,7 @@ $loopEventHandler = function (MqttClient $mqtt, float $elapsedTime) use ($publis
         if(in_array('publicholidays',$explodedFeaturesList)) publishPublicHolidays($mqtt, $mqttprefix, $countryCode, $departmentNumber);
         if(in_array('season',$explodedFeaturesList)) publishSeason($mqtt, $mqttprefix);
 
-        $lastPublishTime = $todayPublishHour;
+        $lastPublishTime = $now;
     }
 };
 
