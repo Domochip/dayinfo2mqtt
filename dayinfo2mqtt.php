@@ -258,7 +258,7 @@ function publishPublicHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
     $holidays = getPublicHolidays($countryCode, $departmentNumber, date("Y")) + getPublicHolidays($countryCode, $departmentNumber, date("Y") + 1);
 
     $today = (array_key_exists($todayTimeStamp, $holidays)) ? 1 : 0;
-    $todayLabel = ($holiday == 1) ? $holidays[$todayTimeStamp] : '';
+    $todayLabel = ($today == 1) ? $holidays[$todayTimeStamp] : '';
 
     //find the next public holiday
     foreach ($holidays as $date => $label) {
