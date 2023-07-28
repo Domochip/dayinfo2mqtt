@@ -67,111 +67,174 @@ function loadCSV($csvPath, $delimiter = ',') {
 }
 
 function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departmentNumber) {
-//https://www.data.gouv.fr/en/datasets/contours-geographiques-des-academies/
-//https://www.data.gouv.fr/en/datasets/le-calendrier-scolaire/
+    //https://www.data.gouv.fr/en/datasets/contours-geographiques-des-academies/
+    //https://www.data.gouv.fr/en/datasets/le-calendrier-scolaire/
 
-    $holiday = '0';
-    $nholiday = '-';
-    $nextlabel = '-';
-    //build calendar ID
+
     if ($countryCode == 'fr') {
 
-        if (strpos($departmentNumber,'97') == true) {
+        // DOM TOM not supported
+        if (strpos($departmentNumber, '97') == true) {
             logger('Error : Calendrier des DOM TOM non pris en charge');
             return;
         }
+
+        // Load France files
         $academies = loadCSV(dirname(__FILE__) . '/resources/fr/academies.csv');
+        $calendar = loadCSV(dirname(__FILE__) . '/resources/fr/fr.csv', ';');
+
+        // ----- Find Zone -----
 
         // return the first item where dep starts with the departmentNumber
         $academy = current(array_filter($academies, function ($item) use ($departmentNumber) {
             return strpos($item['dep'], $departmentNumber) === 0;
         }));
 
-        $calendarName= str_replace(' ','-',$academy['vacances']);
-    } else {
-        $calendarName = $countryCode;
-    }
-    $icaddr = dirname(__FILE__) . '/resources/' . $countryCode . '/' . $calendarName . '.ics';
-    $ical   = new ICal\ICal($icaddr);
+        // get the right Zone (A-B-C) for the academy
+        $zone = $academy['vacances'];
 
-    $events = $ical->events();
-    $datetoday = date_create("today");
-    $diffday = 365;
-    $diffend = 365;
-    $finete = date_create(mktime(0, 0, 0, 1,  1));
-    $debutete = $finete;
+        // ----- Prepare the calendar -----
 
-    foreach ($events as $event) {
-        if (isset($event->dtend)) {
-            $datehol = date_create($event->dtstart);
-            if ($datetoday < $datehol) {
-                //calcul du début prochaines vacances
-                $diff = date_diff($datetoday, $datehol);
-                if ($diff->format('%a') < $diffday && $diff->format('%a') > 0) {
-                    $diffday = $diff->format('%a');
-                    $nextlabel = $event->summary;
-                }
-            }
-            $datefin = date_create($event->dtend);
-            if ($datetoday < $datefin) {
-                //calcul de la fin des prochaines vacances
-                $diff = date_diff($datetoday, $datefin);
-                if ($diff->format('%a') < $diffend && $diff->format('%a') > 0) {
-                    $diffend = $diff->format('%a');
-                }
-            }
-            if ($datehol <= $datetoday && $datetoday < $datefin)
-            {
-                $holiday = '1';
-                $nholiday = $event->summary;
-            }
+        // filter calendar on zone and population (keep only 'Élèves' and '-')
+        $calendar = array_filter($calendar, function ($item) use ($zone) {
+            return $item['zones'] === $zone && ($item['population'] === '-' || $item['population'] === 'Élèves');
+        });
+
+        // for each item keep only date part (10char) of start_date and end_date
+        $calendar = array_map(function ($item) {
+            $item['start_date'] = substr($item['start_date'], 0, 10);
+            $item['end_date'] = substr($item['end_date'], 0, 10);
+            return $item;
+        }, $calendar);
+
+        // sort calendar by start_date+end_date
+        usort($calendar, function ($a, $b) {
+            return (strtotime($a['start_date']) + strtotime($a['end_date'])) - (strtotime($b['start_date']) + strtotime($b['end_date']));
+        });
+
+        // ----- Define holiday infos -----
+
+        // search for current holiday
+        $datetoday = new DateTime("today");
+        $currentHoliday = current(array_filter($calendar, function ($item) use ($datetoday) {
+            return new DateTime($item['start_date']) <= $datetoday && $datetoday < new DateTime($item['end_date']);
+        }));
+
+        // search for next holiday
+        $nextHoliday = current(array_filter($calendar, function ($item) use ($datetoday) {
+            return $datetoday < new DateTime($item['start_date']);
+        }));
+
+        // if today is holiday
+        if ($currentHoliday) {
+            $holidaytoday = '1';
+            $holidaytodaylabel = $currentHoliday['description'];
+            // if today is holiday then nextend is the number of days until the end of the current holiday
+            $holidaynextend = $datetoday->diff(new DateTime($currentHoliday['end_date']))->days;
         } else {
-            if (strpos($event->description,'été') !== false) {
-                //post debut vacances d'été (label vacances, date supérieure et on est bien sur l'année en cours)
+            $holidaytoday = '0';
+            $holidaytodaylabel = '-';
+            $holidaynextend = $datetoday->diff(new DateTime($nextHoliday['end_date']))->days;
+        }
+
+        $holidaynextbegin = $datetoday->diff(new DateTime($nextHoliday['start_date']))->days;
+        $holidaynextlabel = $nextHoliday['description'];
+
+        publish($mqtt, $prefix . '/schoolholidays/today', $holidaytoday);
+        publish($mqtt, $prefix . '/schoolholidays/todaylabel', $holidaytodaylabel);
+        publish($mqtt, $prefix . '/schoolholidays/nextbegin', $holidaynextbegin);
+        publish($mqtt, $prefix . '/schoolholidays/nextend', $holidaynextend);
+        publish($mqtt, $prefix . '/schoolholidays/nextlabel', $holidaynextlabel);
+
+
+
+    } else { //other countries
+
+        $calendarName = $countryCode;
+
+        $holiday = '0';
+        $nholiday = '-';
+        $nextlabel = '-';
+
+        $icaddr = dirname(__FILE__) . '/resources/' . $countryCode . '/' . $calendarName . '.ics';
+        $ical   = new ICal\ICal($icaddr);
+
+        $events = $ical->events();
+        $datetoday = date_create("today");
+        $diffday = 365;
+        $diffend = 365;
+        $finete = date_create(mktime(0, 0, 0, 1,  1));
+        $debutete = $finete;
+
+        foreach ($events as $event) {
+            if (isset($event->dtend)) {
                 $datehol = date_create($event->dtstart);
-                if (date_format($datetoday,'Y') === date_format($datehol,'Y') ) {
-                    $debutete = $datehol;
-                    //log::add('dayinfo', 'debug', 'Debut ' . $debutete);
+                if ($datetoday < $datehol) {
+                    //calcul du début prochaines vacances
+                    $diff = date_diff($datetoday, $datehol);
+                    if ($diff->format('%a') < $diffday && $diff->format('%a') > 0) {
+                        $diffday = $diff->format('%a');
+                        $nextlabel = $event->summary;
+                    }
+                }
+                $datefin = date_create($event->dtend);
+                if ($datetoday < $datefin) {
+                    //calcul de la fin des prochaines vacances
+                    $diff = date_diff($datetoday, $datefin);
+                    if ($diff->format('%a') < $diffend && $diff->format('%a') > 0) {
+                        $diffend = $diff->format('%a');
+                    }
+                }
+                if ($datehol <= $datetoday && $datetoday < $datefin) {
+                    $holiday = '1';
+                    $nholiday = $event->summary;
+                }
+            } else {
+                if (strpos($event->description, 'été') !== false) {
+                    //post debut vacances d'été (label vacances, date supérieure et on est bien sur l'année en cours)
+                    $datehol = date_create($event->dtstart);
+                    if (date_format($datetoday, 'Y') === date_format($datehol, 'Y')) {
+                        $debutete = $datehol;
+                        //log::add('dayinfo', 'debug', 'Debut ' . $debutete);
+                    }
+                }
+                if ($event->description == "Rentrée scolaire des élèves") {
+                    //post reprise (label rentrée, date supérieure)
+                    $datehol = date_create($event->dtstart);
+                    //log::add('dayinfo', 'debug', 'Fin ' . date_format($datetoday,'Y') . ' ' . date_format($datehol,'Y'));
+                    if (date_format($datetoday, 'Y') === date_format($datehol, 'Y')) {
+                        $finete = $datehol;
+                        //log::add('dayinfo', 'debug', 'Fin ' . $finete);
+                    }
                 }
             }
-            if ($event->description == "Rentrée scolaire des élèves") {
-                //post reprise (label rentrée, date supérieure)
-                $datehol = date_create($event->dtstart);
-                //log::add('dayinfo', 'debug', 'Fin ' . date_format($datetoday,'Y') . ' ' . date_format($datehol,'Y'));
-                if (date_format($datetoday,'Y') === date_format($datehol,'Y') ) {
-                    $finete = $datehol;
-                    //log::add('dayinfo', 'debug', 'Fin ' . $finete);
-                }
+        }
+
+        if ($datetoday < $debutete) {
+            $diff = date_diff($datetoday, $debutete);
+            if ($diff->format('%a') < $diffday && $diff->format('%a') > 0) {
+                $diffday = $diff->format('%a');
+                $nextlabel = "Vacances d'été";
             }
         }
-    }
 
-    if ($datetoday < $debutete) {
-        $diff = date_diff($datetoday, $debutete);
-        if ($diff->format('%a') < $diffday && $diff->format('%a') > 0) {
-            $diffday = $diff->format('%a');
-            $nextlabel = "Vacances d'été";
+        if ($datetoday < $finete) {
+            $diff = date_diff($datetoday, $finete);
+            if ($diff->format('%a') < $diffend && $diff->format('%a') > 0) {
+                $diffend = $diff->format('%a');
+            }
         }
-    }
 
-    if ($datetoday < $finete) {
-        $diff = date_diff($datetoday, $finete);
-        if ($diff->format('%a') < $diffend && $diff->format('%a') > 0) {
-            $diffend = $diff->format('%a');
+        if ($debutete <= $datetoday && $datetoday < $finete) {
+            $holiday = '1';
+            $nholiday = "Vacances d'été";
         }
+        publish($mqtt, $prefix . '/schoolholidays/today', $holiday);
+        publish($mqtt, $prefix . '/schoolholidays/todaylabel', $nholiday);
+        publish($mqtt, $prefix . '/schoolholidays/nextbegin', $diffday);
+        publish($mqtt, $prefix . '/schoolholidays/nextend', $diffend);
+        publish($mqtt, $prefix . '/schoolholidays/nextlabel', $nextlabel);
     }
-
-    if ($debutete <= $datetoday && $datetoday < $finete)
-    {
-        $holiday = '1';
-        $nholiday = "Vacances d'été";
-    }
-
-    publish($mqtt, $prefix.'/schoolholidays/today', $holiday);
-    publish($mqtt, $prefix.'/schoolholidays/todaylabel', $nholiday);
-    publish($mqtt, $prefix.'/schoolholidays/nextbegin', $diffday);
-    publish($mqtt, $prefix.'/schoolholidays/nextend', $diffend);
-    publish($mqtt, $prefix.'/schoolholidays/nextlabel', $nextlabel);
 }
 
 function getPublicHolidays($countryCode, $departmentNumber, $year=null) {
