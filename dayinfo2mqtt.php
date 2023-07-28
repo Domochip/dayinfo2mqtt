@@ -44,6 +44,28 @@ function publishMoon(MqttClient $mqtt, $prefix) {
     publish($mqtt,$prefix.'/moon/name', $name);
 }
 
+function loadCSV($csvPath, $delimiter = ',') {
+
+    if (($csvHandle = fopen($csvPath, "r")) === FALSE) {
+        logger('Error : the file "' . $csvPath . '" can\'t be opened !!!');
+        exit();
+    }
+
+    $rows = [];
+    while (($row = fgetcsv($csvHandle, 1000, $delimiter)) !== false) {
+        $rows[] = $row;
+    }
+    fclose($csvHandle);
+    // Remove the first one that contains headers
+    $headers = array_shift($rows);
+    // Combine the headers with each following row
+    $array = [];
+    foreach ($rows as $row) {
+        $array[] = array_combine($headers, $row);
+    }
+    return $array;
+}
+
 function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departmentNumber) {
 //https://www.data.gouv.fr/en/datasets/contours-geographiques-des-academies/
 //https://www.data.gouv.fr/en/datasets/le-calendrier-scolaire/
@@ -58,18 +80,14 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
             logger('Error : Calendrier des DOM TOM non pris en charge');
             return;
         }
-        $csvPath = dirname(__FILE__) . '/resources/fr/academies.csv';
-        if (($csvHandle = fopen($csvPath, "r")) === FALSE) {
-            logger('Error : the file "'.$csvPath.'" can\'t be opened !!!');
-            exit();
-        }
-        while ( ($data = fgetcsv($csvHandle,1000,",") ) !== FALSE ) {
+        $academies = loadCSV(dirname(__FILE__) . '/resources/fr/academies.csv');
 
-            if ($data[3] == $departmentNumber) {
-                $calendarName =  str_replace(' ','-',$data[2]);
-            }
-        }
-        fclose($csvHandle);
+        // return the first item where dep starts with the departmentNumber
+        $academy = current(array_filter($academies, function ($item) use ($departmentNumber) {
+            return strpos($item['dep'], $departmentNumber) === 0;
+        }));
+
+        $calendarName= str_replace(' ','-',$academy['vacances']);
     } else {
         $calendarName = $countryCode;
     }
@@ -301,10 +319,10 @@ $publishHour = $_ENV["PUBLISHHOUR"] ?? 0;
 $featuresList = strtolower($_ENV["FEATURESLIST"] ?? 'base,moon,schoolholidays,publicholidays,season');
 $countryCode = strtolower($_ENV["COUNTRY"] ?? 'fr');
 $departmentNumber = $_ENV["DEPARTMENT"] ?? '75';
-$debugMode = $_ENV["DEBUGMODE"] ?? false;
+$debugMode = $_ENV["DEBUGMODE"] ?? true;
 
 $mqttprefix = $_ENV["PREFIX"] ?? "dayinfo2mqtt";
-$mqtthost = $_ENV["HOST"];
+$mqtthost = $_ENV["HOST"] ?? "192.168.1.33";
 $mqttport = $_ENV["PORT"] ?? 1883;
 $mqttclientid = $_ENV["CLIENTID"] ?? "dayinfo2mqtt";
 $mqttuser = $_ENV["USER"];
@@ -393,5 +411,3 @@ $mqtt->registerLoopEventHandler($loopEventHandler);
 
 $mqtt->loop(true);
 $mqtt->disconnect();
-
-?>
