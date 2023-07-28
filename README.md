@@ -1,10 +1,6 @@
-# Prerequisites
-
-An access to the Internet for school vacations update (Not Yet Implemented)
-
 # How does it work
 
-This image publishes once a day some usefull information about the current day about:  
+This image publishes once a day some usefull information about the current day:  
 - Basic information
 - Moon
 - School Holidays
