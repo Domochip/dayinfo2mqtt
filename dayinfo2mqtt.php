@@ -319,10 +319,10 @@ $publishHour = $_ENV["PUBLISHHOUR"] ?? 0;
 $featuresList = strtolower($_ENV["FEATURESLIST"] ?? 'base,moon,schoolholidays,publicholidays,season');
 $countryCode = strtolower($_ENV["COUNTRY"] ?? 'fr');
 $departmentNumber = $_ENV["DEPARTMENT"] ?? '75';
-$debugMode = $_ENV["DEBUGMODE"] ?? true;
+$debugMode = $_ENV["DEBUGMODE"] ?? false;
 
 $mqttprefix = $_ENV["PREFIX"] ?? "dayinfo2mqtt";
-$mqtthost = $_ENV["HOST"] ?? "192.168.1.33";
+$mqtthost = $_ENV["HOST"] ?? "127.0.0.1";
 $mqttport = $_ENV["PORT"] ?? 1883;
 $mqttclientid = $_ENV["CLIENTID"] ?? "dayinfo2mqtt";
 $mqttuser = $_ENV["USER"];
