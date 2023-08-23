@@ -26,10 +26,19 @@ jobs:
 
       - name: Update Resource Files
         run: |
-          while IFS=, read -r URL dest; do 
+          while IFS=$'\t' read -r URL dest sortoptions; do 
             echo "Downloading $URL to $dest"
-            curl --fail -L -sS $URL -o $dest --create-dirs; 
-          done < <(tail -n +2 ./resources/resources-urls.csv)
+            curl --fail -L -sS $URL -o $dest --create-dirs
+            if [[ ! -z "$sortoptions" ]]; then
+              echo "Sorting $dest"
+              # echo "sortoptions: $sortoptions"
+              sortargs=($sortoptions)
+              # echo "sortargs: ${sortargs[@]}"
+              # echo "Number of elements in sortargs: ${#sortargs[@]}"
+              (head -n 1 $dest && tail -n +2 $dest | sort "${sortargs[@]}") > $dest-tmp
+              mv $dest-tmp $dest
+            fi; 
+          done < <(tail -n +2 ./resources/resources-urls.tsv)
 
       - name: Commit, Push, PR and Merge if changes
         run: |
