@@ -1,7 +1,9 @@
 name: Publish Docker Dev image
 
 on:
-  push
+  push:
+  pull_request:
+    types: [closed]
 
 jobs:
   push_to_registry:
