@@ -102,8 +102,22 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
 
         // for each item keep only date part (10char) of start_date and end_date
         $calendar = array_map(function ($item) {
-            $item['start_date'] = substr($item['start_date'], 0, 10);
-            $item['end_date'] = substr($item['end_date'], 0, 10);
+            // convert start_date and end_date to DateTime object using UTC timezone
+            $startDate = new DateTime($item['start_date'], new DateTimeZone('UTC'));
+            $endDate = new DateTime($item['end_date'], new DateTimeZone('UTC'));
+            // if startDate hour is after 21h then add 1 day
+            if ($startDate->format('H') >= 21) {
+                $startDate->add(new DateInterval('P1D'));
+            }
+            // if endDate hour is after 21h then add 1 day
+            if ($endDate->format('H') >= 21) {
+                $endDate->add(new DateInterval('P1D'));
+            }
+    
+            // save dates back to item
+            $item['start_date'] = $startDate->format('Y-m-d');
+            $item['end_date'] = $endDate->format('Y-m-d');
+
             return $item;
         }, $calendar);
 
