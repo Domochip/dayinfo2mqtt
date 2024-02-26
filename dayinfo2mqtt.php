@@ -402,8 +402,8 @@ $mqttprefix = $_ENV["PREFIX"] ?? "dayinfo2mqtt";
 $mqtthost = $_ENV["HOST"] ?? "127.0.0.1";
 $mqttport = $_ENV["PORT"] ?? 1883;
 $mqttclientid = $_ENV["CLIENTID"] ?? "dayinfo2mqtt";
-$mqttuser = $_ENV["USER"];
-$mqttpassword = $_ENV["PASSWORD"];
+$mqttuser = $_ENV["USER"] ?? null;
+$mqttpassword = $_ENV["PASSWORD"] ?? null;
 
 //Set up Timzezone for date/time php functions
 if (!date_default_timezone_set($timezone)){
