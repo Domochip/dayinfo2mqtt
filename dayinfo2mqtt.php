@@ -393,7 +393,7 @@ function publishSeason(MqttClient $mqtt, $prefix) {
 //------------------------------- MAIN -------------------------------
 //--------------------------------------------------------------------
 
-$versionnumber='1.1.1';
+$versionnumber='1.2.0';
 
 echo sprintf('===== dayinfo2mqtt v%s =====',$versionnumber).PHP_EOL;
 
