@@ -10,7 +10,7 @@ use PhpMqtt\Client\MqttClient;
 pcntl_async_signals(true);
 
 //turn off output buffering
-ob_end_flush();
+while (ob_get_level()) ob_end_clean(); 
 
 
 function logger($message){
