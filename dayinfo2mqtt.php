@@ -51,6 +51,12 @@ function loadCSV($csvPath, $delimiter = ',') {
         exit();
     }
 
+    // read first 3 characters to compare to the BOM string
+    if (fgets($csvHandle, 4) !== "\xef\xbb\xbf") {
+        // otherwise rewind pointer to start of file
+        rewind($csvHandle);
+    }
+
     $rows = [];
     while (($row = fgetcsv($csvHandle, 1000, $delimiter)) !== false) {
         $rows[] = $row;
