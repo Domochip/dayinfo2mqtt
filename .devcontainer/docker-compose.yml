@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  dayinfo2mqtt:
+    build: 
+      context: ..
+      args:
+        - BASE_IMAGE=mcr.microsoft.com/devcontainers/php:8.3
+    volumes:
+      - ..:/app:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    entrypoint: sleep infinity
+
+    # Runs app on the same network as the mosquitto container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:mosquitto
+
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    restart: unless-stopped
+
+    # Add "forwardPorts": ["1883"] to **devcontainer.json** to forward mosquitto locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)

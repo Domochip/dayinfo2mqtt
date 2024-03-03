@@ -1,0 +1,14 @@
+{
+	"name": "dayinfo2mqtt",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "dayinfo2mqtt",
+	"workspaceFolder": "/app",
+	"containerEnv": {
+		"DEBUGMODE": "1"
+	},
+	"postCreateCommand": "composer update",
+	"postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}", // to avoid Git unsafe directory warning
+	"forwardPorts": [
+		1883
+	]
+}
