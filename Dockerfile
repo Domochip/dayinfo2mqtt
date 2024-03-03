@@ -1,4 +1,5 @@
-FROM php:8.3-cli-alpine
+ARG BASE_IMAGE=php:8.3-cli-alpine
+FROM $BASE_IMAGE as base
 
 WORKDIR /app
 
