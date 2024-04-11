@@ -156,8 +156,8 @@
              $x = new Season(substr($this->_date,0,4)-1);
              $d = $x->getDate(4);  // getdate for phase 4 last year
           }
-          $d2 = strftime('%d-%m-%Y',strtotime($d));
-          $d1 = strftime('%d-%m-%Y',strtotime($this->_date));
+          $d2 = date('d-m-Y',strtotime($d));
+          $d1 = date('d-m-Y',strtotime($this->_date));
           $delta = round((strtotime($d2) - strtotime($d1))/86400);
           return -$delta;
           //echo $this->_date." to ".$d." = ".$delta;
@@ -170,8 +170,8 @@
              $x = new Season(substr($this->_date,0,4)+1);
              $d = $x->getDate(1);  // getdate for phase 1 next year
           }
-          $d2 = strftime('%d-%m-%Y',strtotime($d));
-          $d1 = strftime('%d-%m-%Y',strtotime($this->_date));
+          $d2 = date('d-m-Y',strtotime($d));
+          $d1 = date('d-m-Y',strtotime($this->_date));
           $delta = round((strtotime($d2) - strtotime($d1))/86400);
           return $delta;
           //echo $this->_date." to ".$d." = ".$delta;
