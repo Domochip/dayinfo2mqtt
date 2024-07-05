@@ -1645,6 +1645,7 @@ Vacances d'Été;Enseignants;2024-07-05T22:00:00+00:00;2024-08-29T22:00:00+00:00
 Vacances d'Été;Enseignants;2024-07-05T22:00:00+00:00;2024-08-29T22:00:00+00:00;Paris;Zone C;2023-2024
 Vacances d'Été;Enseignants;2024-07-05T22:00:00+00:00;2024-08-29T22:00:00+00:00;Toulouse;Zone C;2023-2024
 Vacances d'Été;Enseignants;2024-07-05T22:00:00+00:00;2024-08-29T22:00:00+00:00;Versailles;Zone C;2023-2024
+Vacances d'Été;Enseignants;2024-07-05T22:00:00+00:00;2024-09-01T22:00:00+00:00;Corse;Corse;2023-2024
 Vacances d'Été;Élèves;2024-07-05T22:00:00+00:00;2024-09-01T22:00:00+00:00;Guadeloupe;Guadeloupe;2023-2024
 Vacances d'Été;Élèves;2024-07-05T22:00:00+00:00;2024-09-01T22:00:00+00:00;Guyane;Guyane;2023-2024
 Vacances d'Été;Élèves;2024-07-05T22:00:00+00:00;2024-09-01T22:00:00+00:00;Martinique;Martinique;2023-2024
@@ -1672,7 +1673,7 @@ Vacances d'Été;Élèves;2024-07-05T22:00:00+00:00;2024-09-01T22:00:00+00:00;Mo
 Vacances d'Été;Élèves;2024-07-05T22:00:00+00:00;2024-09-01T22:00:00+00:00;Paris;Zone C;2023-2024
 Vacances d'Été;Élèves;2024-07-05T22:00:00+00:00;2024-09-01T22:00:00+00:00;Toulouse;Zone C;2023-2024
 Vacances d'Été;Élèves;2024-07-05T22:00:00+00:00;2024-09-01T22:00:00+00:00;Versailles;Zone C;2023-2024
-Début des Vacances d'Été;-;2024-07-05T22:00:00+00:00;2027-07-05T23:00:00+00:00;Corse;Corse;2023-2024
+Vacances d'Été;Élèves;2024-07-05T22:00:00+00:00;2024-09-04T22:00:00+00:00;Corse;Corse;2023-2024
 Vacances 3ème période;-;2024-08-02T22:00:00+00:00;2024-08-17T22:00:00+00:00;Nouvelle Calédonie;Nouvelle Calédonie;2024
 Vacances 3ème période;-;2024-08-02T22:00:00+00:00;2024-08-17T22:00:00+00:00;Wallis et Futuna;Wallis et Futuna;2024
 Vacances de Septembre;-;2024-09-13T22:00:00+00:00;2024-09-22T22:00:00+00:00;Polynésie;Polynésie;2024-2025
@@ -1680,6 +1681,7 @@ Vacances 4ème période;-;2024-10-04T22:00:00+00:00;2024-10-19T22:00:00+00:00;No
 Vacances 4ème période;-;2024-10-04T22:00:00+00:00;2024-10-19T22:00:00+00:00;Wallis et Futuna;Wallis et Futuna;2024
 Abolition de l’esclavage;Saint-Barthélémy;2024-10-08T22:00:00+00:00;2024-10-08T22:00:00+00:00;Guadeloupe;Guadeloupe;2024-2025
 Vacances après 1ère période;-;2024-10-11T22:00:00+00:00;2024-10-27T23:00:00+00:00;Réunion;Réunion;2024-2025
+Vacances de la Toussaint;-;2024-10-18T22:00:00+00:00;2024-11-03T23:00:00+00:00;Corse;Corse;2024-2025
 Vacances de la Toussaint;-;2024-10-18T22:00:00+00:00;2024-11-03T23:00:00+00:00;Guyane;Guyane;2024-2025
 Vacances de la Toussaint;-;2024-10-18T22:00:00+00:00;2024-11-03T23:00:00+00:00;Martinique;Martinique;2024-2025
 Vacances de la Toussaint;-;2024-10-18T22:00:00+00:00;2024-11-03T23:00:00+00:00;Besançon;Zone A;2024-2025
@@ -1713,6 +1715,7 @@ Vacances de Noël;-;2024-12-13T23:00:00+00:00;2025-01-12T23:00:00+00:00;Polynés
 Vacances d'Été;Enseignants;2024-12-13T23:00:00+00:00;2025-02-13T23:00:00+00:00;Nouvelle Calédonie;Nouvelle Calédonie;2024
 Vacances d'Été;Élèves;2024-12-13T23:00:00+00:00;2025-02-16T23:00:00+00:00;Nouvelle Calédonie;Nouvelle Calédonie;2024
 Vacances d'Été austral;-;2024-12-18T23:00:00+00:00;2025-01-20T23:00:00+00:00;Réunion;Réunion;2024-2025
+Vacances de Noël;-;2024-12-20T23:00:00+00:00;2025-01-05T23:00:00+00:00;Corse;Corse;2024-2025
 Vacances de Noël;-;2024-12-20T23:00:00+00:00;2025-01-05T23:00:00+00:00;Guadeloupe;Guadeloupe;2024-2025
 Vacances de Noël;-;2024-12-20T23:00:00+00:00;2025-01-05T23:00:00+00:00;Guyane;Guyane;2024-2025
 Vacances de Noël;-;2024-12-20T23:00:00+00:00;2025-01-05T23:00:00+00:00;Martinique;Martinique;2024-2025
@@ -1757,6 +1760,7 @@ Vacances d'Hiver;-;2025-02-14T23:00:00+00:00;2025-03-02T23:00:00+00:00;Montpelli
 Vacances d'Hiver;-;2025-02-14T23:00:00+00:00;2025-03-02T23:00:00+00:00;Paris;Zone C;2024-2025
 Vacances d'Hiver;-;2025-02-14T23:00:00+00:00;2025-03-02T23:00:00+00:00;Toulouse;Zone C;2024-2025
 Vacances d'Hiver;-;2025-02-14T23:00:00+00:00;2025-03-02T23:00:00+00:00;Versailles;Zone C;2024-2025
+Vacances d'Hiver;-;2025-02-14T23:00:00+00:00;2025-04-02T22:00:00+00:00;Corse;Corse;2024-2025
 Vacances de Carnaval;-;2025-02-21T23:00:00+00:00;2025-03-09T23:00:00+00:00;Guadeloupe;Guadeloupe;2024-2025
 Vacances de Carnaval;-;2025-02-21T23:00:00+00:00;2025-03-09T23:00:00+00:00;Guyane;Guyane;2024-2025
 Vacances de Carnaval;-;2025-02-21T23:00:00+00:00;2025-03-09T23:00:00+00:00;Martinique;Martinique;2024-2025
@@ -1783,6 +1787,7 @@ Vacances de Printemps;-;2025-04-04T22:00:00+00:00;2025-04-21T22:00:00+00:00;Orl�
 Vacances de Printemps;-;2025-04-04T22:00:00+00:00;2025-04-21T22:00:00+00:00;Reims;Zone B;2024-2025
 Vacances de Printemps;-;2025-04-04T22:00:00+00:00;2025-04-21T22:00:00+00:00;Rennes;Zone B;2024-2025
 Vacances de Printemps;-;2025-04-04T22:00:00+00:00;2025-04-21T22:00:00+00:00;Strasbourg;Zone B;2024-2025
+Vacances de Printemps;-;2025-04-11T22:00:00+00:00;2025-04-27T22:00:00+00:00;Corse;Corse;2024-2025
 Vacances de Pâques;-;2025-04-11T22:00:00+00:00;2025-04-27T22:00:00+00:00;Martinique;Martinique;2024-2025
 Vacances de Printemps;-;2025-04-11T22:00:00+00:00;2025-04-27T22:00:00+00:00;Créteil;Zone C;2024-2025
 Vacances de Printemps;-;2025-04-11T22:00:00+00:00;2025-04-27T22:00:00+00:00;Montpellier;Zone C;2024-2025
@@ -1807,6 +1812,7 @@ Abolition de l’esclavage;Guadeloupe sauf Saint-Martin;2025-05-26T22:00:00+00:0
 Semaine en mai;Saint Martin;2025-05-26T22:00:00+00:00;2025-05-26T22:00:00+00:00;Guadeloupe;Guadeloupe;2024-2025
 Abolition de l’esclavage;Saint-Martin;2025-05-27T22:00:00+00:00;2025-05-27T22:00:00+00:00;Guadeloupe;Guadeloupe;2024-2025
 Semaine en mai;Guadeloupe & Saint-Barthélémy;2025-05-27T22:00:00+00:00;2025-05-27T22:00:00+00:00;Guadeloupe;Guadeloupe;2024-2025
+Pont de l'Ascension;-;2025-05-28T22:00:00+00:00;2025-06-01T22:00:00+00:00;Corse;Corse;2024-2025
 Pont de l'Ascension;-;2025-05-28T22:00:00+00:00;2025-06-01T22:00:00+00:00;Guyane;Guyane;2024-2025
 Pont de l'Ascension;-;2025-05-28T22:00:00+00:00;2025-06-01T22:00:00+00:00;Martinique;Martinique;2024-2025
 Pont de l'Ascension;-;2025-05-28T22:00:00+00:00;2025-06-01T22:00:00+00:00;Besançon;Zone A;2024-2025
@@ -1836,8 +1842,10 @@ Pont de l'Ascension;-;2025-05-28T22:00:00+00:00;2025-06-01T22:00:00+00:00;Versai
 Semaine en mai;Guadeloupe & Saint-Barthélémy;2025-05-29T22:00:00+00:00;2025-05-30T22:00:00+00:00;Guadeloupe;Guadeloupe;2024-2025
 Semaine en mai;Saint Martin;2025-05-29T22:00:00+00:00;2025-05-30T22:00:00+00:00;Guadeloupe;Guadeloupe;2024-2025
 Vacances 2ème période;-;2025-06-06T22:00:00+00:00;2025-06-21T22:00:00+00:00;Nouvelle Calédonie;Nouvelle Calédonie;2025
+Lundi de Pentecôte;-;2025-06-08T22:00:00+00:00;2025-06-08T22:00:00+00:00;Corse;Corse;2024-2025
 Grandes Vacances;Enseignants du premier degré;2025-07-03T22:00:00+00:00;2025-08-10T22:00:00+00:00;Polynésie;Polynésie;2024-2025
 Grandes Vacances;Élèves du premier degré;2025-07-03T22:00:00+00:00;2025-08-12T22:00:00+00:00;Polynésie;Polynésie;2024-2025
+Début des Vacances d'Été;-;2025-07-04T22:00:00+00:00;2025-07-04T22:00:00+00:00;Corse;Corse;2024-2025
 Grandes Vacances;Enseignants du second degré;2025-07-04T22:00:00+00:00;2025-08-10T22:00:00+00:00;Polynésie;Polynésie;2024-2025
 Grandes Vacances;Élèves du second degré;2025-07-04T22:00:00+00:00;2025-08-11T22:00:00+00:00;Polynésie;Polynésie;2024-2025
 Vacances d'Hiver austral;Enseignants;2025-07-04T22:00:00+00:00;2025-08-17T22:00:00+00:00;Réunion;Réunion;2024-2025
