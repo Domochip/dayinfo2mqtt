@@ -103,7 +103,7 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
 
         // filter calendar on zone and population (keep only 'Élèves' and '-')
         $calendar = array_filter($calendar, function ($item) use ($zone) {
-            return $item['zones'] === $zone && ($item['population'] === '-' || $item['population'] === 'Élèves');
+            return $item['zones'] === $zone && ($item['Population'] === '-' || $item['Population'] === 'Élèves');
         });
 
         // for each item keep only date part (10char) of start_date and end_date
