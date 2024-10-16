@@ -106,10 +106,10 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
             return $item['zones'] === $zone && ($item['Population'] === '-' || $item['Population'] === 'Élèves');
         });
 
-        // for each item keep only date part (10char) of start_date and end_date
+        // for each item keep only date part (10char) of "Date de début" and end_date
         $calendar = array_map(function ($item) {
-            // convert start_date and end_date to DateTime object using UTC timezone
-            $startDate = new DateTime($item['start_date'], new DateTimeZone('UTC'));
+            // convert "Date de début" and end_date to DateTime object using UTC timezone
+            $startDate = new DateTime($item['Date de début'], new DateTimeZone('UTC'));
             $endDate = new DateTime($item['end_date'], new DateTimeZone('UTC'));
             // if startDate hour is after 21h then add 1 day
             if ($startDate->format('H') >= 21) {
@@ -121,15 +121,15 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
             }
     
             // save dates back to item
-            $item['start_date'] = $startDate->format('Y-m-d');
+            $item['Date de début'] = $startDate->format('Y-m-d');
             $item['end_date'] = $endDate->format('Y-m-d');
 
             return $item;
         }, $calendar);
 
-        // sort calendar by start_date+end_date
+        // sort calendar by "Date de début"+end_date
         usort($calendar, function ($a, $b) {
-            return (strtotime($a['start_date']) + strtotime($a['end_date'])) - (strtotime($b['start_date']) + strtotime($b['end_date']));
+            return (strtotime($a['Date de début']) + strtotime($a['end_date'])) - (strtotime($b['Date de début']) + strtotime($b['end_date']));
         });
 
         // ----- Define holiday infos -----
@@ -137,12 +137,12 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
         // search for current holiday
         $datetoday = new DateTime("today");
         $currentHoliday = current(array_filter($calendar, function ($item) use ($datetoday) {
-            return new DateTime($item['start_date']) <= $datetoday && $datetoday < new DateTime($item['end_date']);
+            return new DateTime($item['Date de début']) <= $datetoday && $datetoday < new DateTime($item['end_date']);
         }));
 
         // search for next holiday
         $nextHoliday = current(array_filter($calendar, function ($item) use ($datetoday) {
-            return $datetoday < new DateTime($item['start_date']);
+            return $datetoday < new DateTime($item['Date de début']);
         }));
 
         // if today is holiday
@@ -157,7 +157,7 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
             $holidaynextend = $datetoday->diff(new DateTime($nextHoliday['end_date']))->days;
         }
 
-        $holidaynextbegin = $datetoday->diff(new DateTime($nextHoliday['start_date']))->days;
+        $holidaynextbegin = $datetoday->diff(new DateTime($nextHoliday['Date de début']))->days;
         $holidaynextlabel = $nextHoliday['Description'];
 
         publish($mqtt, $prefix . '/schoolholidays/today', $holidaytoday);
