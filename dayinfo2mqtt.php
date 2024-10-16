@@ -148,7 +148,7 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
         // if today is holiday
         if ($currentHoliday) {
             $holidaytoday = '1';
-            $holidaytodaylabel = $currentHoliday['description'];
+            $holidaytodaylabel = $currentHoliday['Description'];
             // if today is holiday then nextend is the number of days until the end of the current holiday
             $holidaynextend = $datetoday->diff(new DateTime($currentHoliday['end_date']))->days;
         } else {
@@ -158,7 +158,7 @@ function publishSchoolHolidays(MqttClient $mqtt, $prefix, $countryCode, $departm
         }
 
         $holidaynextbegin = $datetoday->diff(new DateTime($nextHoliday['start_date']))->days;
-        $holidaynextlabel = $nextHoliday['description'];
+        $holidaynextlabel = $nextHoliday['Description'];
 
         publish($mqtt, $prefix . '/schoolholidays/today', $holidaytoday);
         publish($mqtt, $prefix . '/schoolholidays/todaylabel', $holidaytodaylabel);
